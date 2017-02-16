@@ -10,11 +10,13 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import br.gov.planejamento.bean.LevantamentoSistemas;
 import br.gov.planejamento.bean.LevantamentoSistemasConsolidado;
+import br.gov.planejamento.bean.NecessidadeSoftware;
 import br.gov.planejamento.util.Utils;
 
 public class LerPlanilha {
 
 private List<LevantamentoSistemas> informacoesList = new ArrayList<LevantamentoSistemas>();
+private List<NecessidadeSoftware> necessidadeList = new ArrayList<NecessidadeSoftware>();
 private LevantamentoSistemasConsolidado lista = new LevantamentoSistemasConsolidado();	
 	
 	public LevantamentoSistemasConsolidado readODS(File file)
@@ -22,17 +24,26 @@ private LevantamentoSistemasConsolidado lista = new LevantamentoSistemasConsolid
       Sheet sheetInfoBasicas;
       Sheet sheetInfoTecnicas;
       Sheet sheetInfoContratuais;
+      Sheet sheetNecessidades;
       try {
-           //Getting the 0th sheet for manipulation| pass sheet name as string
+           
            sheetInfoBasicas = SpreadSheet.createFromFile(file).getSheet(0);
            sheetInfoTecnicas = SpreadSheet.createFromFile(file).getSheet(1);
            sheetInfoContratuais = SpreadSheet.createFromFile(file).getSheet(2);
+           sheetNecessidades = SpreadSheet.createFromFile(file).getSheet(3);
+           
            ValidaCampo vc = new ValidaCampo();
            ValidaOrgao vo = new ValidaOrgao();
            
            int linhasEmBranco = 0;
+           int linhasEmBrancoNecessidades = 0;
+           
            int nRowCount = sheetInfoBasicas.getRowCount();
+           int nRowCountNecessidade = sheetNecessidades.getRowCount();
+           
            boolean error = false;
+           LevantamentoSistemas info;
+           NecessidadeSoftware necessidadeSoftware;
            
            
            lista.setSIORG(vo.retornaSIORG(sheetInfoBasicas.getCellAt(3,2).getValue().toString()));
@@ -52,7 +63,7 @@ private LevantamentoSistemasConsolidado lista = new LevantamentoSistemasConsolid
         			   throw new RuntimeException("Um dos campos \"Categoria\" deve ser preenchido!" );
         		   }
         	   
-	        	   LevantamentoSistemas info = new LevantamentoSistemas();
+	        	   info = new LevantamentoSistemas();
 	        	   //Informacoes Basicas
 	        	   String finalidade = sheetInfoBasicas.getCellAt(3, nRowIndex).getValue().toString();
 	        	   
@@ -178,8 +189,30 @@ private LevantamentoSistemasConsolidado lista = new LevantamentoSistemasConsolid
         		   break loop;
         	   } 
             }
+           
+           // novo codigo
+           loopNecessidadeSOftware: for(int nRowIndex = 7; nRowIndex < nRowCountNecessidade; nRowIndex++)
+           {
+        	   String verificaConteudo = sheetNecessidades.getCellAt(2, nRowIndex).getValue().toString();
+        	   if (verificaConteudo.length() > 0){
+        		   necessidadeSoftware = new NecessidadeSoftware();
+        		   necessidadeSoftware.setAreaMeio(sheetNecessidades.getCellAt(2, nRowIndex).getValue().toString());
+        		   necessidadeSoftware.setDescricao(sheetNecessidades.getCellAt(3, nRowIndex).getValue().toString());
+        		   System.out.println(sheetNecessidades.getCellAt(2, nRowIndex).getValue().toString());
+        		   System.out.println(sheetNecessidades.getCellAt(3, nRowIndex).getValue().toString());
+        		   necessidadeList.add(necessidadeSoftware);
+        	   } else {
+        		   linhasEmBranco++;
+        	   }
+        	   
+        	   if (linhasEmBrancoNecessidades == 5){
+        		   break loopNecessidadeSOftware;
+        	   }
+           }
+           
+           
            lista.setLista(informacoesList);
-
+           lista.setListaNecessidade(necessidadeList);
           } catch (IOException e) {
             e.printStackTrace();
           }
