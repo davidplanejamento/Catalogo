@@ -16,7 +16,7 @@ public class ArquivoOrgaoDAOImpl implements ArquivoOrgaoDAO{
 		try {
 			conn = ConexaoBD.getConexao();
 			
-			String sql = "INSERT INTO ARQUIVOORGAO (SIORG, arquivo) values (?,?)";
+			String sql = "INSERT INTO arquivoorgao (SIORG, arquivo) values (?,?)";
 			PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, SIORG); 
             preparedStatement.setBinaryStream(2, inputStream);

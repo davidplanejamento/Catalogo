@@ -17,7 +17,7 @@ public class TabelaConsolidadaDAOImpl implements TabelaConsolidadaDAO{
 		try {
 			conn = ConexaoBD.getConexao();
 			
-            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO TABELACONSOLIDADA "
+            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO tabelaconsolidada "
             		+ "(SIORG, nomeSoftware,finalidadeDescricao,area,criticidade,categoria1,categoria2,"
             		+ "categoria3,compartilhar,motivoNaoCompartilhamento,nivelSatisfacao,situacao,"
             		+ "tipoDeAquisicao,valorPontoFuncao,valorDaAquisicao,custoManutencaoAnual,plataformaOperacional,"

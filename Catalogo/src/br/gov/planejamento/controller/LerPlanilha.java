@@ -190,7 +190,7 @@ private LevantamentoSistemasConsolidado lista = new LevantamentoSistemasConsolid
         	   } 
             }
            
-           // novo codigo
+           
            loopNecessidadeSOftware: for(int nRowIndex = 7; nRowIndex < nRowCountNecessidade; nRowIndex++)
            {
         	   String verificaConteudo = sheetNecessidades.getCellAt(2, nRowIndex).getValue().toString();
@@ -202,7 +202,7 @@ private LevantamentoSistemasConsolidado lista = new LevantamentoSistemasConsolid
         		   System.out.println(sheetNecessidades.getCellAt(3, nRowIndex).getValue().toString());
         		   necessidadeList.add(necessidadeSoftware);
         	   } else {
-        		   linhasEmBranco++;
+        		   linhasEmBrancoNecessidades++;
         	   }
         	   
         	   if (linhasEmBrancoNecessidades == 5){
